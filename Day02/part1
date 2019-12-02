@@ -1,0 +1,51 @@
+package Day02;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Day02 {
+    public static void main(String[] args) {
+        File file = new File("src\\com\\company\\Day02\\dataset.txt");
+        ArrayList<Integer> dataset = new ArrayList<Integer>();
+
+        try(Scanner scan = new Scanner(file).useDelimiter(",")) {
+
+            while(scan.hasNext()) {
+                dataset.add(scan.nextInt());
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        for(int i = 0; i < dataset.size(); i += 4) {
+            int pos0 = dataset.get(i);
+            int pos1 = dataset.get(i + 1);
+            int pos2 = dataset.get(i + 2);
+            int pos3 = dataset.get(i + 3);
+
+            switch(pos0) {
+
+                case 99 :
+                    i = dataset.size();
+                    break;
+
+                case 1:
+                    dataset.set(pos3, dataset.get(pos1) + dataset.get(pos2));
+                    break;
+
+                case 2:
+                    dataset.set(pos3, dataset.get(pos1) * dataset.get(pos2));
+                    break;
+
+                default:
+                    System.out.println("Unrecognized Opcode!");
+            }
+        }
+
+        System.out.println(dataset);
+    }
+
+}
