@@ -1,0 +1,36 @@
+package com.company.Day01;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+public class Main {
+
+    public static void main(String[] args) {
+        File file = new File("dataset.txt");
+
+        int sum = 0;
+
+        try {
+            Scanner scan = new Scanner(file);
+
+            while(scan.hasNext()) {
+                sum += calculateFuelRequired(scan.nextInt());
+            }
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        System.out.println(sum);
+    }
+
+    public static int calculateFuelRequired(int mass) {
+        int fuelRequired = mass / 3 - 2;
+
+        if(fuelRequired / 3 - 2 > 0) {
+            fuelRequired += calculateFuelRequired(fuelRequired);
+        }
+        return fuelRequired;
+    }
+}
