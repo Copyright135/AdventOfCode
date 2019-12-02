@@ -11,8 +11,7 @@ public class Main {
 
         int sum = 0;
 
-        try {
-            Scanner scan = new Scanner(file);
+        try(Scanner scan = new Scanner(file)) {
 
             while(scan.hasNext()) {
                 sum += calculateFuelRequired(scan.nextInt());
