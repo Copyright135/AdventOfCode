@@ -1,0 +1,91 @@
+package Day02;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Day02 {
+    public static void main(String[] args) {
+        File file = new File("src\\com\\company\\Day02\\dataset.txt");
+        ArrayList<Integer> dataset = new ArrayList<Integer>();
+
+        //reads in all data from the file to an ArrayList of type Integer
+        try (Scanner scan = new Scanner(file).useDelimiter(",")) {
+
+            while (scan.hasNext()) {
+                dataset.add(scan.nextInt());
+            }
+
+            dataset.trimToSize();
+
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        int target = 19690720;
+
+        //the nested loops increase the "noun" and "verb" of the opcode by 1 until the target number is reached
+        boolean found = false;
+
+        for (int i = 0; i < 100 && !found; i++) {
+            for (int j = 0; j < 100 && !found; j++) {
+                var dataCopy = clone(dataset);
+                dataCopy.set(1, i);
+                dataCopy.set(2, j);
+
+                found = runIntCode(target, dataCopy);
+                if(found) {
+                    System.out.println(dataCopy);
+                    System.out.println(100 * i + j);
+                }
+            }
+        }
+    }
+
+    //run the Intcode to check for the target
+    private static boolean runIntCode(int target, ArrayList<Integer> dataCopy) {
+        for (int k = 0; k < dataCopy.size(); k += 4) {
+            int pos0 = dataCopy.get(k);
+            int pos1 = dataCopy.get(k + 1);
+            int pos2 = dataCopy.get(k + 2);
+            int pos3 = dataCopy.get(k + 3);
+
+            switch (pos0) {
+
+                case 99:
+                    k = dataCopy.size();
+                    break;
+
+                case 1:
+                    dataCopy.set(pos3, dataCopy.get(pos1) + dataCopy.get(pos2));
+                    break;
+
+                case 2:
+                    dataCopy.set(pos3, dataCopy.get(pos1) * dataCopy.get(pos2));
+                    break;
+
+                default:
+                    System.out.println("Unrecognized Opcode!");
+            }
+        }
+
+        if(dataCopy.get(0) == target) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    //this method clones an ArrayList that is sent to it and sends back a copy
+    private static ArrayList<Integer> clone(ArrayList<Integer> dataset) {
+        ArrayList<Integer> dataCopy = (ArrayList<Integer>) dataset.clone();
+
+        for(int i = 0; i < dataset.size(); i++) {
+            dataCopy.set(i, dataset.get(i));
+        }
+
+        return dataCopy;
+    }
+
+}
